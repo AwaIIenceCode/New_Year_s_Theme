@@ -1,39 +1,76 @@
 #include <iostream>
-#include <ctime>
+#include <string>
 
 using namespace std;
 
-void countdownToNewYear()
+const int MAX_TASKS = 100;
+
+void displayMenu()
 {
-    time_t now = time(0);
-    tm* currentTime = localtime(&now);
+    cout << "\n New Year's To-Do List" << endl;
+    cout << "1. Add a task" << endl;
+    cout << "2. Show all tasks" << endl;
+    cout << "3. Exit" << endl;
+    cout << "Choose an option: ";
+}
 
-    tm newYearTime = *currentTime;
-    newYearTime.tm_year += 1;
-    newYearTime.tm_mon = 0;
-    newYearTime.tm_mday = 1;
-    newYearTime.tm_hour = 0;
-    newYearTime.tm_min = 0;
-    newYearTime.tm_sec = 0;
+void addTask(string tasks[], int &taskCount)
+{
+    if (taskCount >= MAX_TASKS)
+    {
+        cout << "The list is full! Remove something to add a new task." << endl;
+        return;
+    }
 
-    double secondsLeft = difftime(mktime(&newYearTime), now);
+    cout << "Enter a new task: ";
+    cin.ignore();
+    getline(cin, tasks[taskCount]);
+    taskCount++;
+    cout << "Task added!" << endl;
+}
 
-    int days = secondsLeft / (60 * 60 * 24);
-    int hours = (secondsLeft / (60 * 60)) - (days * 24);
-    int minutes = (secondsLeft / 60) - (days * 24 * 60) - (hours * 60);
-    int seconds = secondsLeft - (days * 24 * 60 * 60) - (hours * 60 * 60) - (minutes * 60);
+void showTasks(const string tasks[], int taskCount)
+{
+    if (taskCount == 0)
+    {
+        cout << "The list is empty! Start adding tasks." << endl;
+        return;
+    }
 
-    cout << "Time left until New Year:" << endl;
-    cout << days << " days, " << hours << " hours, " << minutes << " minutes, " << seconds << " seconds." << endl;
+    cout << "\nYour to-do list:" << endl;
+
+    for (int i = 0; i < taskCount; ++i)
+    {
+        cout << i + 1 << ". " << tasks[i] << endl;
+    }
 }
 
 int main()
 {
-    cout << "Welcome to the New Year Countdown!" << endl;
+    string tasks[MAX_TASKS];
+    int taskCount = 0;
+    int choice;
 
-    countdownToNewYear();
+    do
+    {
+        displayMenu();
+        cin >> choice;
 
-    cout << "Happy New Year in advance!" << endl;
+        switch (choice)
+        {
+            case 1:
+                addTask(tasks, taskCount);
+                break;
+            case 2:
+                showTasks(tasks, taskCount);
+                break;
+            case 3:
+                cout << "Happy New Year! See you soon!" << endl;
+                break;
+            default:
+                cout << "Invalid choice! Please try again." << endl;
+        }
+    } while (choice != 3);
 
     return 0;
 }
