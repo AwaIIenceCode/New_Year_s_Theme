@@ -1,39 +1,39 @@
 #include <iostream>
-#include <string>
-#include <cstdlib>
 #include <ctime>
 
 using namespace std;
 
-void generateWish()
+void countdownToNewYear()
 {
-    const int count = 5;
-    const string wishes[count] =
-            {
-            "May this year bring you lots of joy and happiness!",
-            "Wishing you success and prosperity in the coming year!",
-            "Let all your dreams come true in this wonderful new year!",
-            "May the warmth of the holidays surround you all year long!",
-            "Here’s to health, wealth, and endless happiness in the New Year!"
-    };
+    time_t now = time(0);
+    tm* currentTime = localtime(&now);
 
-    int randomIndex = rand() % count;
-    cout << wishes[randomIndex] << endl;
+    tm newYearTime = *currentTime;
+    newYearTime.tm_year += 1;
+    newYearTime.tm_mon = 0;
+    newYearTime.tm_mday = 1;
+    newYearTime.tm_hour = 0;
+    newYearTime.tm_min = 0;
+    newYearTime.tm_sec = 0;
+
+    double secondsLeft = difftime(mktime(&newYearTime), now);
+
+    int days = secondsLeft / (60 * 60 * 24);
+    int hours = (secondsLeft / (60 * 60)) - (days * 24);
+    int minutes = (secondsLeft / 60) - (days * 24 * 60) - (hours * 60);
+    int seconds = secondsLeft - (days * 24 * 60 * 60) - (hours * 60 * 60) - (minutes * 60);
+
+    cout << "Time left until New Year:" << endl;
+    cout << days << " days, " << hours << " hours, " << minutes << " minutes, " << seconds << " seconds." << endl;
 }
 
 int main()
 {
-    srand(static_cast<unsigned int>(time(0)));
+    cout << "Welcome to the New Year Countdown!" << endl;
 
-    char choice;
-    do
-    {
-        cout << "Here is your New Year's wish:" << endl;
-        generateWish();
-        cout << "Do you want another one? (y/n): ";
-        cin >> choice;
-    } while (choice == 'y' || choice == 'Y');
+    countdownToNewYear();
 
-    cout << "Happy New Year! Goodbye!" << endl;
+    cout << "Happy New Year in advance!" << endl;
+
     return 0;
 }
